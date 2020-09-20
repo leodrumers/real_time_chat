@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 
 class LogoHeader extends StatefulWidget {
+  final String title;
   const LogoHeader({
     Key key,
+    @required this.title,
   }) : super(key: key);
 
   @override
@@ -14,13 +16,15 @@ class _LogoHeaderState extends State<LogoHeader> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 150,
         child: Column(
           children: [
-            SizedBox(height: 30),
-            Image(image: AssetImage('assets/images/chat.png')),
-            SizedBox(height: 30),
-            Text('Messenger', style: TextStyle(fontSize: 30)),
+            SizedBox(height: 15),
+            Image(
+              image: AssetImage('assets/images/chat.png'),
+              width: 120,
+            ),
+            SizedBox(height: 15),
+            Text(widget.title, style: TextStyle(fontSize: 30)),
           ],
         ),
       ),
