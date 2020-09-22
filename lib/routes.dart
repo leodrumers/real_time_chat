@@ -1,10 +1,10 @@
-import 'package:chat_app/views/chat_page.dart';
 import 'package:chat_app/views/loading_page.dart';
-import 'package:chat_app/views/user_page.dart';
 import 'package:flutter/material.dart';
 
+import 'file:///C:/Users/Leo/Documents/flutter/chat_app/lib/views/chat/chat_page.dart';
 import 'file:///C:/Users/Leo/Documents/flutter/chat_app/lib/views/login/login_page.dart';
 import 'file:///C:/Users/Leo/Documents/flutter/chat_app/lib/views/register/register_page.dart';
+import 'file:///C:/Users/Leo/Documents/flutter/chat_app/lib/views/user/user_page.dart';
 
 final Map<String, WidgetBuilder> routes = {
   ChatPage.routeName: (context) => ChatPage(),

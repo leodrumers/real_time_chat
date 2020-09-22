@@ -19,7 +19,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: kBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
