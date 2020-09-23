@@ -1,13 +1,27 @@
 class User {
-  bool online;
-  String name, email, uid;
-  int color;
-
   User({
     this.online,
     this.name,
     this.email,
     this.uid,
-    this.color = 0xFF8C9EFF,
   });
+
+  bool online;
+  String name;
+  String email;
+  String uid;
+
+  factory User.fromJson(Map<String, dynamic> json) => User(
+        online: json["online"],
+        name: json["name"],
+        email: json["email"],
+        uid: json["uid"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "online": online,
+        "name": name,
+        "email": email,
+        "uid": uid,
+      };
 }

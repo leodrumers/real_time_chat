@@ -12,24 +12,24 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage> {
   final List<User> users = [
     User(
-        uid: '1',
-        name: 'Leo',
-        online: true,
-        email: 'leodrumers@gmail',
-        color: 0xFF00A6A6),
+      uid: '1',
+      name: 'Leo',
+      online: true,
+      email: 'leodrumers@gmail',
+    ),
     User(
-        uid: '2',
-        name: 'Yura',
-        online: false,
-        email: 'yura@gmail',
-        color: 0xffB48EAE),
+      uid: '2',
+      name: 'Yura',
+      online: false,
+      email: 'yura@gmail',
+    ),
     User(uid: '3', name: 'Mathias', online: true, email: 'mathias@gmail'),
     User(
-        uid: '4',
-        name: 'Other',
-        online: false,
-        email: 'other@gmail',
-        color: 0xff0267c1),
+      uid: '4',
+      name: 'Other',
+      online: false,
+      email: 'other@gmail',
+    ),
   ];
 
   RefreshController _refreshController =
@@ -95,7 +95,7 @@ class _UserPageState extends State<UserPage> {
           user.name.substring(0, 2),
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Color(user.color),
+        backgroundColor: Colors.blueAccent[400],
       ),
       trailing: Container(
         width: 10,

@@ -1,6 +1,8 @@
 import 'package:chat_app/routes.dart';
-import 'package:chat_app/views/chat/chat_page.dart';
+import 'package:chat_app/services/auth_services.dart';
+import 'package:chat_app/views/login/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,12 +11,15 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Chat app',
-      home: ChatPage(),
-      //initialRoute: LoginPage.routeName,
-      routes: routes,
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => AuthService())],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Chat app',
+        home: LoginPage(),
+        //initialRoute: LoginPage.routeName,
+        routes: routes,
+      ),
     );
   }
 }
