@@ -26,7 +26,7 @@ class RegisterFormWidget extends StatelessWidget {
         children: [
           SizedBox(height: 16),
           CustomInputField(
-              textController: emailCtrl,
+              textController: nameCtrl,
               hintText: 'Nombre',
               inputType: TextInputType.text,
               prefixIcon: Icons.person_outline),

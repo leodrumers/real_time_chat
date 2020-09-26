@@ -1,5 +1,8 @@
 import 'package:chat_app/model/user.dart';
+import 'package:chat_app/services/auth_services.dart';
+import 'package:chat_app/views/login/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class UserPage extends StatefulWidget {
@@ -37,11 +40,13 @@ class _UserPageState extends State<UserPage> {
 
   @override
   Widget build(BuildContext context) {
+    final authServivce = Provider.of<AuthService>(context);
+    final User user = authServivce.user;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Mi nombre',
+          user.name,
           style: TextStyle(color: Colors.black87),
         ),
         backgroundColor: Colors.white,
@@ -60,7 +65,11 @@ class _UserPageState extends State<UserPage> {
             Icons.exit_to_app,
             color: Colors.black87,
           ),
-          onPressed: () {},
+          onPressed: () {
+            // Todo: desconectar del socket
+            Navigator.pushReplacementNamed(context, LoginPage.routeName);
+            AuthService.deleteToken();
+          },
         ),
       ),
       body: SmartRefresher(
