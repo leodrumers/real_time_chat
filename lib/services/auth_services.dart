@@ -84,6 +84,7 @@ class AuthService with ChangeNotifier {
   }
 
   Future _logout() async {
+    this.logging = false;
     await _storage.delete(key: 'token');
   }
 }

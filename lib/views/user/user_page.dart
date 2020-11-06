@@ -1,7 +1,9 @@
 import 'package:chat_app/model/user.dart';
 import 'package:chat_app/services/auth_services.dart';
+import 'package:chat_app/services/chat_service.dart';
 import 'package:chat_app/services/socket_service.dart';
 import 'package:chat_app/services/users_services.dart';
+import 'package:chat_app/views/chat/chat_page.dart';
 import 'package:chat_app/views/login/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -103,6 +105,13 @@ class _UserPageState extends State<UserPage> {
             borderRadius: BorderRadius.circular(100)),
       ),
       subtitle: Text(user.email),
+      onTap: () {
+        final ChatService chatService =
+            Provider.of<ChatService>(context, listen: false);
+        chatService.userDestiny = user;
+
+        Navigator.pushNamed(context, ChatPage.routeName);
+      },
     );
   }
 
