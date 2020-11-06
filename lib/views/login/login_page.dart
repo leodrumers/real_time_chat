@@ -1,5 +1,6 @@
 import 'package:chat_app/colors_app.dart';
 import 'package:chat_app/services/auth_services.dart';
+import 'package:chat_app/services/socket_service.dart';
 import 'package:chat_app/views/components/show_dialog.dart';
 import 'package:chat_app/views/login/components/label_widget.dart';
 import 'package:chat_app/views/register/register_page.dart';
@@ -19,11 +20,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  SocketServiceProvider _socketService;
   TextEditingController emailCtrl = TextEditingController();
   TextEditingController passCtrl = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    _socketService = Provider.of<SocketServiceProvider>(context);
     return Scaffold(
       backgroundColor: kBackgroundColor,
       body: SafeArea(
@@ -71,9 +74,11 @@ class _LoginPageState extends State<LoginPage> {
     FocusScope.of(context).unfocus();
     bool okLogin =
         await authService.login(emailCtrl.text.trim(), passCtrl.text.trim());
-    okLogin
-        ? Navigator.pushReplacementNamed(context, UserPage.routeName)
-        : showErrorDialog(
-            context, 'Error', 'Por favor valide sus credenciales');
+    if (okLogin) {
+      _socketService.connect();
+      Navigator.pushReplacementNamed(context, UserPage.routeName);
+    } else {
+      showErrorDialog(context, 'Error', 'Por favor valide sus credenciales');
+    }
   }
 }
