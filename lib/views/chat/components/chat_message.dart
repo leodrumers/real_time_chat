@@ -1,6 +1,8 @@
 import 'package:chat_app/colors_app.dart';
+import 'package:chat_app/services/auth_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChatMessage extends StatelessWidget {
   final String uid, txt;
@@ -15,6 +17,9 @@ class ChatMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AuthService authService =
+        Provider.of<AuthService>(context, listen: false);
+
     return FadeTransition(
       opacity: animationController,
       child: SizeTransition(
@@ -22,7 +27,7 @@ class ChatMessage extends StatelessWidget {
         sizeFactor:
             CurvedAnimation(parent: animationController, curve: Curves.easeOut),
         child: Container(
-            child: this.uid == '123'
+            child: this.uid == authService.user.uid
                 ? _buildMessageBox(mainUser: true)
                 : _buildMessageBox(mainUser: false)),
       ),

@@ -1,4 +1,8 @@
+import 'package:chat_app/services/auth_services.dart';
+import 'package:chat_app/services/chat_service.dart';
+import 'package:chat_app/services/socket_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'chat_message.dart';
 
@@ -18,17 +22,31 @@ class BodyChat extends StatefulWidget {
 class _BodyChatState extends State<BodyChat> with TickerProviderStateMixin {
   final FocusNode _focusNode = FocusNode();
   bool _isWriting = false;
+
+  ChatService _chatService;
+  SocketServiceProvider _socketServiceProvider;
+  AuthService _authService;
+
+  @override
+  void initState() {
+    _chatService = Provider.of<ChatService>(context, listen: false);
+    _socketServiceProvider =
+        Provider.of<SocketServiceProvider>(context, listen: false);
+    _authService = Provider.of<AuthService>(context, listen: false);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var txtCtrl = widget.txtCtrl;
-    List<ChatMessage> messages = widget.messages;
+    List<ChatMessage> _messages = widget.messages;
     return Container(
       child: Column(
         children: [
           Flexible(
             child: ListView.builder(
-              itemCount: messages.length,
-              itemBuilder: (_, index) => messages[index],
+              itemCount: _messages.length,
+              itemBuilder: (_, index) => _messages[index],
               reverse: true,
             ),
           ),
@@ -82,12 +100,11 @@ class _BodyChatState extends State<BodyChat> with TickerProviderStateMixin {
   }
 
   _handleSubmited(String message) {
-    print(message);
     _clearTextBox();
     _focusNode.requestFocus();
     if (message.trim().length > 0) {
       ChatMessage newMessage = ChatMessage(
-        uid: '123',
+        uid: _authService.user.uid,
         txt: message,
         animationController: AnimationController(
             vsync: this, duration: Duration(milliseconds: 400)),
@@ -98,6 +115,12 @@ class _BodyChatState extends State<BodyChat> with TickerProviderStateMixin {
     setState(() {
       _isWriting = false;
     });
+
+    this._socketServiceProvider.emit('personal-message', {
+      'from': this._authService.user.uid,
+      'to': _chatService.userDestiny.uid,
+      'message': message
+    });
   }
 
   _clearTextBox() {
@@ -106,10 +129,11 @@ class _BodyChatState extends State<BodyChat> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    // TODO: of del socket
-    for(ChatMessage message in widget.messages){
+    for (ChatMessage message in widget.messages) {
       message.animationController.dispose();
     }
+
+    this._socketServiceProvider.socket.off('personal-message');
     super.dispose();
   }
 }

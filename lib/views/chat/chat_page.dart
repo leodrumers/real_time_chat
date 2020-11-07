@@ -1,5 +1,7 @@
 import 'package:chat_app/colors_app.dart';
+import 'package:chat_app/model/message.dart';
 import 'package:chat_app/services/chat_service.dart';
+import 'package:chat_app/services/socket_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,16 +18,24 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   TextEditingController textEditingController = TextEditingController();
-  List<ChatMessage> _messages = [];
+  List<ChatMessage> _messagesList = [];
+
+  SocketServiceProvider _socketServiceProvider;
+  ChatService _chatService;
+
+  @override
+  void initState() {
+    _chatService = Provider.of<ChatService>(context, listen: false);
+    _socketServiceProvider =
+        Provider.of<SocketServiceProvider>(context, listen: false);
+    _socketServiceProvider.socket.on('personal-message', _listenMessages);
+    _loadMessageHistory(_chatService.userDestiny.uid);
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final ChatService chatService = Provider.of<ChatService>(context);
-    /*_messages.add(ChatMessage(
-        uid: '122',
-        txt: 'Mi mens',
-        animationController: AnimationController(
-            vsync: this, duration: Duration(milliseconds: 400))));
-    _messages[0].animationController.forward();*/
     return Scaffold(
       backgroundColor: kBackgroundColor,
       appBar: AppBar(
@@ -34,8 +44,42 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
       ),
       body: BodyChat(
         txtCtrl: textEditingController,
-        messages: _messages,
+        messages: _messagesList,
       ),
     );
+  }
+
+  _listenMessages(dynamic payload) {
+    ChatMessage chatMessage = ChatMessage(
+      txt: payload['message'],
+      uid: payload['from'],
+      animationController: AnimationController(
+          vsync: this, duration: Duration(milliseconds: 300)),
+    );
+    setState(() {
+      _messagesList.insert(0, chatMessage);
+    });
+
+    chatMessage.animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    this._socketServiceProvider.socket.off('personal-message');
+    super.dispose();
+  }
+
+  void _loadMessageHistory(String uid) async {
+    List<Message> _messagesHistory = await this._chatService.getMessage(uid);
+    final history = _messagesHistory.map((message) => ChatMessage(
+        uid: message.from,
+        txt: message.message,
+        animationController: AnimationController(
+            vsync: this, duration: Duration(milliseconds: 0))
+          ..forward()));
+
+    setState(() {
+      _messagesList.insertAll(0, history);
+    });
   }
 }
